@@ -1,0 +1,50 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        Int        @id @default(autoincrement())
+  name      String
+  email     String     @unique
+  password  String
+  createdAt DateTime   @default(now())
+  medicines Medicine[]
+}
+
+model Medicine {
+  id         Int                @id @default(autoincrement())
+  userId     Int
+  name       String
+  dosage     String
+  unit       String
+  totalStock Int
+  threshold  Int
+  createdAt  DateTime           @default(now())
+  user       User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reminders  ReminderSchedule[]
+  stockLogs  StockLog[]
+}
+
+model ReminderSchedule {
+  id         Int      @id @default(autoincrement())
+  medicineId Int
+  time       String
+  frequency  String
+  isTaken    Boolean  @default(false)
+  date       DateTime @default(now())
+  medicine   Medicine @relation(fields: [medicineId], references: [id], onDelete: Cascade)
+}
+
+model StockLog {
+  id         Int      @id @default(autoincrement())
+  medicineId Int
+  type       String
+  quantity   Int
+  note       String?
+  createdAt  DateTime @default(now())
+  medicine   Medicine @relation(fields: [medicineId], references: [id], onDelete: Cascade)
+}
