@@ -3,10 +3,15 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
-import { Pill, LayoutDashboard, Bell, Package, LogOut } from "lucide-react";
+import { Pill, LayoutDashboard, Bell, Package, LogOut,Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const navItems = [
+  {
+    href: "/",
+    label: "Home",
+    icon: <Home className="w-4 h-4" />,
+  },
   {
     href: "/dashboard",
     label: "Dashboard",
