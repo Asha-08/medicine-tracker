@@ -1,36 +1,161 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 💊 MedTracker
 
-## Getting Started
+A personal medicine tracking web application built with **Next.js**, **TypeScript**, **Prisma**, and **PostgreSQL**.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## 🚀 Features
+
+- 🔐 **Authentication** — Secure signup and signin with NextAuth.js
+- 💊 **Medicine Management** — Add, edit, and delete medicines with dosage and stock info
+- 🔔 **Smart Reminders** — Set multiple daily/weekly reminders per medicine
+- 📦 **Stock Tracking** — Track stock in/out with automatic deduction on dose taken
+- ⚠️ **Low Stock Alerts** — Get notified when medicine stock is running low
+- ✅ **Auto Stock Deduction** — Marking a dose as taken automatically deducts stock
+- 📊 **Dashboard** — Overview of today's reminders, low stock, and recent stock changes
+- 📱 **Fully Responsive** — Works on all devices
+
+---
+
+## 🛠 Tech Stack
+
+| Category | Technology |
+|---|---|
+| Framework | Next.js 16 (App Router) |
+| Language | TypeScript |
+| UI | shadcn/ui + Tailwind CSS |
+| Authentication | NextAuth.js v5 (Auth.js) |
+| Database | PostgreSQL (Neon) |
+| ORM | Prisma 7 |
+| Validation | Zod + React Hook Form |
+| Alerts | SweetAlert2 |
+
+---
+
+## 📁 Project Structure
+
+medicine-tracker/
+├── app/
+│   ├── (auth)/
+│   │   ├── signin/
+│   │   └── signup/
+│   ├── api/
+│   │   ├── auth/
+│   │   ├── medicines/
+│   │   ├── reminders/
+│   │   ├── stock/
+│   │   └── dashboard/
+│   ├── dashboard/
+│   │   ├── medicines/
+│   │   ├── reminders/
+│   │   └── stock/
+│   └── page.tsx
+├── components/
+│   ├── dashboard/
+│   ├── home/
+│   ├── layout/
+│   ├── medicines/
+│   ├── reminders/
+│   └── stock/
+├── lib/
+│   └── db.ts
+├── prisma/
+│   └── schema.prisma
+├── types/
+│   ├── medicine.ts
+│   ├── reminder.ts
+│   ├── stock.ts
+│   └── dashboard.ts
+└── middleware.ts
+
+---
+
+## 🗄️ Database Schema
+
+```prisma
+User
+  └── Medicine (one-to-many)
+        ├── ReminderSchedule (one-to-many)
+        │     └── ReminderTime (one-to-many)
+        └── StockLog (one-to-many)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## ⚙️ Getting Started
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Prerequisites
 
-## Learn More
+- Node.js v18+
+- PostgreSQL database (or Neon account)
 
-To learn more about Next.js, take a look at the following resources:
+### Installation
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. **Clone the repository**
+```bash
+git clone https://github.com/Asha-08/medicine-tracker.git
+cd medicine-tracker
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+2. **Install dependencies**
+```bash
+npm install
+```
 
-## Deploy on Vercel
+3. **Set up environment variables**
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Create a `.env` file in the root:
+```env
+DATABASE_URL="-----"
+AUTH_SECRET="------"
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+4. **Run database migrations**
+```bash
+npx prisma migrate dev
+```
+
+5. **Start the development server**
+```bash
+npm run dev
+```
+
+6. **Open the app**
+
+Visit [http://localhost:3000](http://localhost:3000)
+
+---
+
+## 🔑 Environment Variables
+
+| Variable | Description |
+|---|---|
+| `DATABASE_URL` | PostgreSQL connection string |
+| `AUTH_SECRET` | NextAuth secret key |
+
+---
+
+## 📸 Pages
+
+| Page | Route | Access |
+|---|---|---|
+| Landing Page | `/` | Public |
+| Sign Up | `/signup` | Public |
+| Sign In | `/signin` | Public |
+| Dashboard | `/dashboard` | Protected |
+| Medicines | `/dashboard/medicines` | Protected |
+| Reminders | `/dashboard/reminders` | Protected |
+| Stock | `/dashboard/stock` | Protected |
+
+---
+
+## 🧠 Key Concepts Used
+
+- **JWT Authentication** with NextAuth.js
+- **Prisma ORM** with relational data modeling
+- **Server-side API Routes** with Next.js App Router
+- **Zod validation** for form and API data
+- **Prisma Transactions** for atomic stock updates
+- **Protected Routes** with Next.js Middleware
+- **Component-based architecture** for clean code
+
