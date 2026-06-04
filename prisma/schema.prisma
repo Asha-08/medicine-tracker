@@ -30,14 +30,23 @@ model Medicine {
 }
 
 model ReminderSchedule {
-  id         Int      @id @default(autoincrement())
+  id         Int            @id @default(autoincrement())
   medicineId Int
-  time       String
   frequency  String
-  isTaken    Boolean  @default(false)
-  date       DateTime @default(now())
-  medicine   Medicine @relation(fields: [medicineId], references: [id], onDelete: Cascade)
+  createdAt  DateTime       @default(now())
+  medicine   Medicine       @relation(fields: [medicineId], references: [id], onDelete: Cascade)
+  times      ReminderTime[]
 }
+
+model ReminderTime {
+  id         Int              @id @default(autoincrement())
+  reminderId Int
+  time       String
+  isTaken    Boolean          @default(false)
+  date       DateTime         @default(now())
+  reminder   ReminderSchedule @relation(fields: [reminderId], references: [id], onDelete: Cascade)
+}
+
 
 model StockLog {
   id         Int      @id @default(autoincrement())
