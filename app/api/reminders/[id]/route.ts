@@ -62,6 +62,7 @@ export async function PUT(
 }
 
 // PUT — single time slot isTaken toggle
+// PATCH — single time slot isTaken toggle + auto stock deduction
 export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -92,19 +93,70 @@ export async function PATCH(
       return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
 
-    const reminderTime = await prisma.reminderTime.update({
-      where: { id: parseInt(id) },
-      data: { isTaken },
-    });
+    const medicine = existing.reminder.medicine;
+    const doseAmount = medicine.doseAmount;
 
-    return NextResponse.json(reminderTime);
+    // isTaken true reduce stock , false back stock 
+    if (isTaken && !existing.isTaken) {
+      // Taken  — stock reduce
+      const newStock = medicine.totalStock - doseAmount;
+
+      if (newStock < 0) {
+        return NextResponse.json(
+          { error: "Not enough stock" },
+          { status: 400 }
+        );
+      }
+
+      await prisma.$transaction([
+        prisma.reminderTime.update({
+          where: { id: parseInt(id) },
+          data: { isTaken: true },
+        }),
+        prisma.medicine.update({
+          where: { id: medicine.id },
+          data: { totalStock: newStock },
+        }),
+        prisma.stockLog.create({
+          data: {
+            medicineId: medicine.id,
+            type: "OUT",
+            quantity: doseAmount,
+            note: "Auto deducted — dose taken",
+          },
+        }),
+      ]);
+    } else if (!isTaken && existing.isTaken) {
+      // Untaken  — stock back
+      await prisma.$transaction([
+        prisma.reminderTime.update({
+          where: { id: parseInt(id) },
+          data: { isTaken: false },
+        }),
+        prisma.medicine.update({
+          where: { id: medicine.id },
+          data: { totalStock: medicine.totalStock + doseAmount },
+        }),
+        prisma.stockLog.create({
+          data: {
+            medicineId: medicine.id,
+            type: "IN",
+            quantity: doseAmount,
+            note: "Auto restored — dose unmarked",
+          },
+        }),
+      ]);
+    }
+
+    return NextResponse.json({ message: "Reminder updated successfully" });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "Something went wrong" }, { status: 500 });
   }
 }
 
-// DELETE — reminder delete করো
+
+// DELETE — reminder delete 
 export async function DELETE(
   req: NextRequest,
   { params }: { params: Promise<{ id: string }> }

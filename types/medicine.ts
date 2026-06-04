@@ -5,5 +5,6 @@ export interface Medicine {
   unit: string;
   totalStock: number;
   threshold: number;
+  doseAmount: number;
   createdAt: string;
 }

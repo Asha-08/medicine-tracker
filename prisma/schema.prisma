@@ -23,6 +23,7 @@ model Medicine {
   unit       String
   totalStock Int
   threshold  Int
+  doseAmount Int                @default(0)
   createdAt  DateTime           @default(now())
   user       User               @relation(fields: [userId], references: [id], onDelete: Cascade)
   reminders  ReminderSchedule[]

@@ -35,9 +35,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { name, dosage, unit, totalStock, threshold } = await req.json();
+    const { name, dosage, unit, totalStock, threshold ,doseAmount } = await req.json();
 
-    if (!name || !dosage || !unit || !totalStock || !threshold) {
+    if (!name || !dosage || !unit || !totalStock || !threshold || !doseAmount) {
       return NextResponse.json(
         { error: "All fields are required" },
         { status: 400 }
@@ -51,6 +51,7 @@ export async function POST(req: NextRequest) {
         unit,
         totalStock: parseInt(totalStock),
         threshold: parseInt(threshold),
+        doseAmount: parseInt(doseAmount),
         userId: parseInt(session.user.id),
       },
     });

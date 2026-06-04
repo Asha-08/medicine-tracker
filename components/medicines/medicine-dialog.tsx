@@ -27,14 +27,16 @@ export default function MedicineDialog({
   error,
 }: MedicineDialogProps) {
   const defaultValues = editingMedicine
-    ? {
-        name: editingMedicine.name,
-        dosage: editingMedicine.dosage,
-        unit: editingMedicine.unit,
-        totalStock: String(editingMedicine.totalStock),
-        threshold: String(editingMedicine.threshold),
-      }
-    : undefined;
+  ? {
+      name: editingMedicine.name,
+      dosage: editingMedicine.dosage,
+      unit: editingMedicine.unit,
+      totalStock: String(editingMedicine.totalStock),
+      threshold: String(editingMedicine.threshold),
+      doseAmount: String(editingMedicine.doseAmount),
+    }
+  : undefined;
+  
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>

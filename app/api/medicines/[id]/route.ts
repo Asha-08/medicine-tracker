@@ -45,9 +45,9 @@ export async function PUT(
     }
 
     const { id } = await params;
-    const { name, dosage, unit, totalStock, threshold } = await req.json();
+    const { name, dosage, unit, totalStock, threshold,doseAmount } = await req.json();
 
-    if (!name || !dosage || !unit || !totalStock || !threshold) {
+    if (!name || !dosage || !unit || !totalStock || !threshold || !doseAmount) {
       return NextResponse.json(
         { error: "All fields are required" },
         { status: 400 }
@@ -65,6 +65,7 @@ export async function PUT(
         unit,
         totalStock: parseInt(totalStock),
         threshold: parseInt(threshold),
+        doseAmount: parseInt(doseAmount),
       },
     });
 

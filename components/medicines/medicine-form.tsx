@@ -11,7 +11,9 @@ const medicineSchema = z.object({
   unit: z.string().min(1, "Unit is required"),
   totalStock: z.string().min(1, "Stock is required"),
   threshold: z.string().min(1, "Threshold is required"),
+  doseAmount: z.string().min(1, "Dose amount is required"),
 });
+
 
 export type MedicineFormData = z.infer<typeof medicineSchema>;
 
@@ -109,6 +111,20 @@ export default function MedicineForm({
             </p>
           )}
         </div>
+        <div className="space-y-1.5">
+          <Label htmlFor="doseAmount">Dose Amount (per intake)</Label>
+          <Input
+            id="doseAmount"
+            type="number"
+            placeholder="e.g. 250"
+            {...register("doseAmount")}
+          />
+          {errors.doseAmount && (
+            <p className="text-xs text-destructive">
+              {errors.doseAmount.message}
+            </p>
+          )}
+        </div>
       </div>
 
       {error && (
@@ -128,8 +144,8 @@ export default function MedicineForm({
           {submitting
             ? "Saving..."
             : isEditing
-            ? "Save Changes"
-            : "Add Medicine"}
+              ? "Save Changes"
+              : "Add Medicine"}
         </Button>
       </div>
     </form>
