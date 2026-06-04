@@ -1,7 +1,11 @@
-import { loadEnvFile } from "node:process";
 import type { PrismaConfig } from "prisma";
 
-loadEnvFile(".env");
+try {
+  const { loadEnvFile } = require("node:process");
+  loadEnvFile(".env");
+} catch {
+  
+}
 
 export default {
   datasource: {
