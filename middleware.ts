@@ -3,9 +3,10 @@ import { getToken } from "next-auth/jwt";
 
 export async function middleware(req: NextRequest) {
   const token = await getToken({
-    req,
-    secret: process.env.AUTH_SECRET,
-  });
+  req,
+  secret: process.env.AUTH_SECRET,
+  cookieName: "next-auth.session-token",
+});
 
   const { pathname } = req.nextUrl;
   const isLoggedIn = !!token;
